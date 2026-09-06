@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Travel Planner</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- ═══════════════════════  HEADER  ══════════════════════════ -->
+  <header class="site-header">
+    <div class="chat-header-inner">
+      <div class="brand">
+        <span class="brand-icon">✈</span>
+        <div>
+          <h1 class="brand-title">AI Travel Planner</h1>
+          <p class="brand-subtitle">Plan smarter. Travel better.</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn-details-toggle" id="detailsToggle" onclick="toggleDetails()">
+          ⚙ Trip Details
+        </button>
+        <div class="powered-badge">
+          <span>Powered by</span>
+          <strong>IBM Granite</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════  ADVANCED DETAILS DRAWER  ══════════════════ -->
+  <div class="details-drawer hidden" id="detailsDrawer">
+    <div class="drawer-inner">
+      <div class="drawer-header">
+        <span class="drawer-title">⚙ Advanced Trip Details</span>
+        <button class="drawer-close" onclick="toggleDetails()">✕ Close</button>
+      </div>
+      <div class="drawer-grid">
+
+        <!-- ─── Trip Details ─────────────────────────────────── -->
+        <div class="drawer-section">
+          <h3 class="drawer-section-title">🗺 Trip Details</h3>
+
+          <div class="form-row">
+            <label for="fromLocation">Starting Location</label>
+            <input type="text" id="fromLocation" placeholder="e.g. New York, USA" />
+          </div>
+          <div class="form-row">
+            <label for="destination">Destination</label>
+            <input type="text" id="destination" placeholder="e.g. Paris, France" />
+          </div>
+          <div class="form-row two-col">
+            <div>
+              <label for="numTravelers">Travelers</label>
+              <input type="number" id="numTravelers" value="2" min="1" max="50" />
+            </div>
+            <div>
+              <label for="duration">Duration</label>
+              <input type="text" id="duration" placeholder="e.g. 7 days" />
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="travelDates">Travel Dates <span class="opt">(optional)</span></label>
+            <input type="text" id="travelDates" placeholder="e.g. July 10 – July 17, 2025" />
+          </div>
+          <div class="form-row two-col">
+            <div>
+              <label for="currency">Currency</label>
+              <select id="currency">
+                <option value="USD">USD $</option>
+                <option value="EUR">EUR €</option>
+                <option value="GBP">GBP £</option>
+                <option value="INR">INR ₹</option>
+                <option value="JPY">JPY ¥</option>
+                <option value="AUD">AUD A$</option>
+                <option value="CAD">CAD C$</option>
+                <option value="SGD">SGD S$</option>
+                <option value="AED">AED د.إ</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="budget">Budget</label>
+              <input type="text" id="budget" placeholder="e.g. 3000" />
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="travelStyle">Travel Style</label>
+            <select id="travelStyle">
+              <option value="Moderate">Moderate</option>
+              <option value="Budget">Budget</option>
+              <option value="Luxury">Luxury</option>
+              <option value="Backpacking">Backpacking</option>
+              <option value="Family">Family</option>
+              <option value="Business">Business</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ─── Travel Preferences ───────────────────────────── -->
+        <div class="drawer-section">
+          <h3 class="drawer-section-title">🎯 Travel Preferences</h3>
+
+          <div class="form-row">
+            <label>Interests <span class="opt">(select all that apply)</span></label>
+            <div class="interest-grid" id="interestGrid">
+              <label class="interest-chip"><input type="checkbox" value="Adventure" /> 🧗 Adventure</label>
+              <label class="interest-chip"><input type="checkbox" value="Nature" /> 🌿 Nature</label>
+              <label class="interest-chip"><input type="checkbox" value="History" /> 🏛 History</label>
+              <label class="interest-chip"><input type="checkbox" value="Culture" /> 🎭 Culture</label>
+              <label class="interest-chip"><input type="checkbox" value="Food" /> 🍜 Food</label>
+              <label class="interest-chip"><input type="checkbox" value="Shopping" /> 🛍 Shopping</label>
+              <label class="interest-chip"><input type="checkbox" value="Beaches" /> 🏖 Beaches</label>
+              <label class="interest-chip"><input type="checkbox" value="Nightlife" /> 🎉 Nightlife</label>
+              <label class="interest-chip"><input type="checkbox" value="Relaxation" /> 🧘 Relaxation</label>
+              <label class="interest-chip"><input type="checkbox" value="Photography" /> 📷 Photography</label>
+            </div>
+          </div>
+          <div class="form-row">
+            <label for="transportation">Preferred Transportation</label>
+            <select id="transportation">
+              <option value="Any">Any / No preference</option>
+              <option value="Flights">Flights</option>
+              <option value="Trains">Trains</option>
+              <option value="Buses">Buses</option>
+              <option value="Rental Car">Rental Car</option>
+              <option value="Metro / Public Transit">Metro / Public Transit</option>
+              <option value="Taxis / Rideshare">Taxis / Rideshare</option>
+              <option value="Walking / Cycling">Walking / Cycling</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="accommodation">Accommodation Preference</label>
+            <select id="accommodation">
+              <option value="Any">Any / No preference</option>
+              <option value="Hostel">Hostel</option>
+              <option value="Budget Hotel">Budget Hotel</option>
+              <option value="Mid-range Hotel">Mid-range Hotel</option>
+              <option value="Luxury Hotel">Luxury Hotel</option>
+              <option value="Apartment / Airbnb">Apartment / Airbnb</option>
+              <option value="Resort">Resort</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="dietary">Dietary Preferences</label>
+            <input type="text" id="dietary" placeholder="e.g. Vegetarian, Halal, Gluten-free" />
+          </div>
+          <div class="form-row">
+            <label for="specialRequirements">Special Requirements</label>
+            <textarea id="specialRequirements" rows="2" placeholder="e.g. Wheelchair accessible, travelling with infants"></textarea>
+          </div>
+          <div class="form-row">
+            <label for="otherPreferences">Other Preferences</label>
+            <textarea id="otherPreferences" rows="2" placeholder="e.g. Avoid tourist traps, visit local markets…"></textarea>
+          </div>
+
+          <!-- Hidden travel prompt field – value set by chat input -->
+          <input type="hidden" id="travelPrompt" />
+        </div>
+
+      </div><!-- drawer-grid -->
+
+      <div class="drawer-actions">
+        <button class="btn-primary" style="max-width:260px;" onclick="generateFromDrawer()">
+          ✈️ Generate with These Details
+        </button>
+        <p class="drawer-note">⚠ All budget figures are AI-generated estimates. No real-time data.</p>
+      </div>
+    </div>
+  </div><!-- details-drawer -->
+
+  <!-- ═══════════════════════  CHAT PAGE  ════════════════════════ -->
+  <div class="chat-page" id="chatPage">
+
+    <!-- ── Hero (shown before first message) ─────────────────── -->
+    <div class="chat-hero" id="chatHero">
+      <div class="hero-icon">🌍</div>
+      <h2 class="hero-title">Plan Your Trip</h2>
+      <p class="hero-sub">Describe your trip in plain English. IBM Granite will create a personalised day-by-day itinerary, budget breakdown, accommodation suggestions, transport guide and travel tips.</p>
+      <div class="suggestion-chips">
+        <button class="sug-chip" onclick="fillChatInput('Plan a 5-day trip from Mumbai to Dubai for 2 people, budget ₹80,000, focused on sightseeing and local food.')">🏙 Mumbai → Dubai</button>
+        <button class="sug-chip" onclick="fillChatInput('Plan a 7-day trip from London to Tokyo for 1 person, budget £2,000, interested in culture, history and street food.')">🗼 London → Tokyo</button>
+        <button class="sug-chip" onclick="fillChatInput('Plan a 4-day family trip from New York to Paris for 4 people including 2 kids, budget $5,000, relaxed pace.')">👨‍👩‍👧 Family Paris Trip</button>
+        <button class="sug-chip" onclick="fillChatInput('Budget backpacking trip from Sydney to Bali for 10 days, solo traveller, budget AUD 1,500, adventure and beaches.')">🏖 Sydney → Bali</button>
+        <button class="sug-chip" onclick="fillChatInput('Luxury 5-day trip from Dubai to Maldives for 2 people, no budget limit, best resorts and experiences.')">✨ Luxury Maldives</button>
+      </div>
+    </div>
+
+    <!-- ── Chat messages area ─────────────────────────────────── -->
+    <div class="chat-messages" id="chatMessages"></div>
+
+  </div><!-- chat-page -->
+
+  <!-- ═══════════════════  FIXED BOTTOM BAR  ═════════════════════ -->
+  <div class="chat-bar" id="chatBar">
+    <div class="chat-bar-inner">
+      <div class="chat-input-wrap">
+        <textarea
+          id="chatInput"
+          class="chat-input"
+          rows="1"
+          placeholder="Plan a 5-day trip from Mumbai to Dubai for 2 people with a budget of ₹50,000…"
+        ></textarea>
+      </div>
+      <button class="chat-send-btn" id="chatSendBtn" onclick="chatSend()" title="Generate Travel Plan">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+    <p class="chat-bar-note">⚠ AI-generated estimates only · No real-time pricing or booking data · Powered by IBM Granite</p>
+  </div>
+
+  <!-- ═══════════════════════  FOOTER  ══════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>AI Travel Planner · Powered by <strong>IBM Granite</strong> · Student Prototype</p>
+      <p class="footer-note">AI recommendations only. No real-time bookings, prices, or availability data.</p>
+    </div>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
